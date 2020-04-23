@@ -26,18 +26,19 @@ class Caltech(VisionDataset):
 
         f = open("Caltech101/{}.txt".format(split), "r")
         for x in f:
+            dire = './Caltech101/'+x
             filename = x.split("/")
             if filename[0] != "BACKGROUND_Google":
                 couple = []
                 if filename[0] in classes:
-                    img = pil_loader(x)
+                    img = pil_loader(dire)
                     index = len(classes) - 1
                     couple.append(img)
                     couple.append(index)
                     data.append(couple)
                 else:
                     classes.append(filename[0])
-                    img = pil_loader(x)
+                    img = pil_loader(dire)
                     index = len(classes) - 1
                     couple.append(img)
                     couple.append(index)
