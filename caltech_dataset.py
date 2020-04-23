@@ -7,9 +7,6 @@ import os.path
 import sys
 import random
 
-data = []
-classes = []
-
 
 def pil_loader(path):
     # open path as file to avoid ResourceWarning (https://github.com/python-pillow/Pillow/issues/835)
@@ -20,7 +17,7 @@ def pil_loader(path):
 
 class Caltech(VisionDataset):
     def getTrainVal(self):
-        curr = data
+        curr = self.data
         random.shuffle(curr)
         limit = int((len(curr) * 2) / 3)
         train = range(0, limit)
@@ -31,6 +28,8 @@ class Caltech(VisionDataset):
         super(Caltech, self).__init__(root, transform=transform, target_transform=target_transform)
 
         self.split = split  # This defines the split you are going to use
+        self.data = []
+        self.classes = []
         # (split files are called 'train.txt' and 'test.txt')
 
         f = open("Caltech101/{}.txt".format(split), "r")
@@ -40,24 +39,24 @@ class Caltech(VisionDataset):
             filename = x.split("/")
             if filename[0] != "BACKGROUND_Google":
                 couple = []
-                if filename[0] in classes:
+                if filename[0] in self.classes:
                     img = pil_loader(dire)
-                    index = len(classes) - 1
+                    index = len(self.classes) - 1
                     couple.append(img)
                     couple.append(index)
-                    data.append(couple)
+                    self.data.append(couple)
                 else:
-                    classes.append(filename[0])
+                    self.classes.append(filename[0])
                     img = pil_loader(dire)
-                    index = len(classes) - 1
+                    index = len(self.classes) - 1
                     couple.append(img)
                     couple.append(index)
-                    data.append(couple)
+                    self.data.append(couple)
 
         f.close()
-        print(len(data))
-        print(len(classes))
-        print(classes)
+        print(len(self.data))
+        print(len(self.classes))
+        print(self.classes)
 
         '''
         - Here you should implement the logic for reading the splits files and accessing elements
@@ -78,7 +77,7 @@ class Caltech(VisionDataset):
             tuple: (sample, target) where target is class_index of the target class.
         '''
 
-        image, label = data[index][0], data[index][1]  # Provide a way to access image and label via index
+        image, label = self.data[index][0], self.data[index][1]  # Provide a way to access image and label via index
         # Image should be a PIL Image
         # label can be int
 
@@ -93,7 +92,7 @@ class Caltech(VisionDataset):
         The __len__ method returns the length of the dataset
         It is mandatory, as this is used by several other components
         '''
-        length = len(data)  # Provide a way to get the length (number of elements) of the dataset
+        length = len(self.data)  # Provide a way to get the length (number of elements) of the dataset
         return length
 
 
