@@ -6,6 +6,7 @@ import os
 import os.path
 import sys
 
+#porcodio
 
 def pil_loader(path):
     # open path as file to avoid ResourceWarning (https://github.com/python-pillow/Pillow/issues/835)
