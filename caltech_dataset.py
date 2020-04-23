@@ -86,6 +86,11 @@ class Caltech(VisionDataset):
         '''
         length = len(data)  # Provide a way to get the length (number of elements) of the dataset
         return length
-    def splitTrainVal(self):
-        
+
+    def getTrainVal(self):
+        curr = data
+        random.shuffle(curr)
+        limit = int((len(curr) * 2) / 3)
+        train = range(0, limit)
+        val = range(limit, len(curr))
         return train, val
