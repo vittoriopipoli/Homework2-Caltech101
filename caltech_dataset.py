@@ -5,6 +5,7 @@ from PIL import Image
 import os
 import os.path
 import sys
+import random
 
 data = []
 classes = []
@@ -18,6 +19,14 @@ def pil_loader(path):
 
 
 class Caltech(VisionDataset):
+    def getTrainVal(self):
+        curr = data
+        random.shuffle(curr)
+        limit = int((len(curr) * 2) / 3)
+        train = range(0, limit)
+        val = range(limit, len(curr))
+        return train, val
+
     def __init__(self, root, split='train', transform=None, target_transform=None):
         super(Caltech, self).__init__(root, transform=transform, target_transform=target_transform)
 
@@ -87,10 +96,4 @@ class Caltech(VisionDataset):
         length = len(data)  # Provide a way to get the length (number of elements) of the dataset
         return length
 
-    def getTrainVal(self):
-        curr = data
-        random.shuffle(curr)
-        limit = int((len(curr) * 2) / 3)
-        train = range(0, limit)
-        val = range(limit, len(curr))
-        return train, val
+
