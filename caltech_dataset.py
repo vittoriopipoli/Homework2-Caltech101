@@ -26,7 +26,8 @@ class Caltech(VisionDataset):
 
         f = open("Caltech101/{}.txt".format(split), "r")
         for x in f:
-            dire = './Caltech101/'+x
+
+            dire = "Caltech101/101_ObjectCategories/{}".format(x.rstrip())
             filename = x.split("/")
             if filename[0] != "BACKGROUND_Google":
                 couple = []
@@ -47,6 +48,7 @@ class Caltech(VisionDataset):
         f.close()
         print(len(data))
         print(len(classes))
+        print(classes)
 
         '''
         - Here you should implement the logic for reading the splits files and accessing elements
@@ -84,3 +86,6 @@ class Caltech(VisionDataset):
         '''
         length = len(data)  # Provide a way to get the length (number of elements) of the dataset
         return length
+    def splitTrainVal(self):
+        
+        return train, val
