@@ -7,6 +7,15 @@ import os.path
 import sys
 import random
 from sklearn.model_selection import train_test_split
+from torchvision import transforms
+
+import warnings
+warnings.filterwarnings('ignore')
+import numpy as np
+import skimage.io as io
+from skimage.transform import rotate, AffineTransform, warp
+from skimage.util import random_noise
+from skimage.filters import gaussian
 
 
 
@@ -31,8 +40,7 @@ class Caltech(VisionDataset):
         labels = []
         for i in samples:
             labels.append(self.data[i][1])
-        train, val, y_train, y_val = train_test_split(samples,labels,test_size=0.5,
-        random_state=42,stratify=labels)
+        train, val, y_train, y_val = train_test_split(samples,labels,test_size=0.5,random_state=42,stratify=labels)
         index_train = []
         index_val = []
         for i, el in enumerate(samples):
@@ -68,22 +76,59 @@ class Caltech(VisionDataset):
                     index = len(self.classes) - 1
                     couple.append(img)
                     couple.append(index)
-                    self.data.append(couple)
+                    provData.append(couple)
                 else:
                     self.classes.append(filename[0])
                     img = pil_loader(dire)
                     index = len(self.classes) - 1
                     couple.append(img)
                     couple.append(index)
-                    self.data.append(couple)
+                    provData.append(couple)
 
         f.close()
-        print(len(self.data))
+        print(len(provData))
         print(len(self.classes))
         print(self.classes)
 
 
+        aug2 = transforms.Compose([
+                                   transforms.RandomHorizontalFlip(p=0.5)
 
+                                   # Normalizes tensor with mean and standard deviation
+                                   ])
+        aug3 = transforms.Compose([
+                                   transforms.RandomRotation(45, resample=False, expand=False, center=None, fill=None)
+
+                                   # Normalizes tensor with mean and standard deviation
+                                   ])
+
+        for i in range(0,len(provData)):
+            couple = []
+            couple.append(provData[i][0])
+            couple.append(provData[i][1])
+            self.data.append(couple)
+            couple = []
+            img = aug2(provData[i][0])
+            couple.append(img)
+            couple.append(provData[i][1])
+            self.data.append(couple)
+            couple = []
+            img = aug2(provData[i][0])
+            couple.append(img)
+            couple.append(provData[i][1])
+            self.data.append(couple)
+            couple = []
+            img = aug2(provData[i][0])
+            couple.append(img)
+            couple.append(provData[i][1])
+            self.data.append(couple)
+            couple = []
+            img = aug2(provData[i][0])
+            couple.append(img)
+            couple.append(provData[i][1])
+            self.data.append(couple)
+
+        print(len(self.data))
 
         '''
         - Here you should implement the logic for reading the splits files and accessing elements
