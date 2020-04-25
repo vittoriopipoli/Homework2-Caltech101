@@ -6,6 +6,8 @@ import os
 import os.path
 import sys
 import random
+from sklearn.model_selection import train_test_split
+
 
 
 def pil_loader(path):
@@ -23,6 +25,26 @@ class Caltech(VisionDataset):
         train = range(0, limit)
         val = range(limit, len(curr))
         return train, val
+
+    def retrieveTrainVal(self):
+        samples = range(0,len(self.data))
+        labels = []
+        for i in samples:
+            labels.append(self.data[i][1])
+        train, val, y_train, y_val = train_test_split(samples,labels,test_size=0.5,
+        random_state=42,stratify=labels)
+        index_train = []
+        index_val = []
+        for i, el in enumerate(samples):
+            if el in train:
+                index_train.append(i)
+            else:
+                index_val.append(i)
+
+        print("retrieveTrainVal")
+        print(len(index_train))
+        print(len(index_val))
+        return index_train, index_val
 
     def __init__(self, root, split='train', transform=None, target_transform=None):
         super(Caltech, self).__init__(root, transform=transform, target_transform=target_transform)
